@@ -1,7 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FaUserFriends, FaFighterJet, FaTrophy, FaTimesCircle } from 'react-icons/fa';
 
+import Results from './Results';
+
+import {
+  FaUserFriends,
+  FaFighterJet,
+  FaTrophy,
+  FaTimesCircle
+} from 'react-icons/fa';
 
 function Instructions() {
   return (
@@ -82,18 +89,16 @@ function PlayerPreview({ username, onReset, label }) {
       <div className="row bg-light">
         <div className="player-info">
           <img
-            className='avatar-small'
+            className="avatar-small"
             src={`https://github.com/${username}.png?size=200`}
             alt={`Avatar for ${username}`}
           />
-          <a
-            href={`https://github.com/${username}`}
-            className='link'>
-              {username}
+          <a href={`https://github.com/${username}`} className="link">
+            {username}
           </a>
         </div>
-        <button className='btn-clear flex-center' onClick={onReset}>
-          <FaTimesCircle color='rgb(194, 57, 42)' size={26} />
+        <button className="btn-clear flex-center" onClick={onReset}>
+          <FaTimesCircle color="rgb(194, 57, 42)" size={26} />
         </button>
       </div>
     </div>
@@ -103,7 +108,8 @@ function PlayerPreview({ username, onReset, label }) {
 export default class Battle extends React.Component {
   state = {
     playerOne: null,
-    playerTwo: null
+    playerTwo: null,
+    battle: false
   };
 
   handleSubmit = (id, player) => {
@@ -115,11 +121,15 @@ export default class Battle extends React.Component {
   handleReset = id => {
     this.setState({
       [id]: null
-    })
-  }
+    });
+  };
 
   render() {
-    const { playerOne, playerTwo } = this.state;
+    const { playerOne, playerTwo, battle } = this.state;
+
+    if (battle === true) {
+      return <Results playerOne={playerOne} playerTwo={playerTwo} />;
+    }
 
     return (
       <React.Fragment>
@@ -154,6 +164,15 @@ export default class Battle extends React.Component {
               />
             )}
           </div>
+
+          {playerOne && playerTwo && (
+            <button
+              className="btn btn-dark btn-space"
+              onClick={() => this.setState({ battle: true })}
+            >
+              Battle
+            </button>
+          )}
         </div>
       </React.Fragment>
     );

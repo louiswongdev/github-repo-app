@@ -55,7 +55,7 @@ function ReposGrid({ repos }) {
                 {login}
               </a>
             </h2>
-            <div className="card-list">
+            <ul className="card-list">
               <li>
                 <FaUser color="rgb(255, 191, 116)" size={22} />
                 <a href={`https://github.com/${login}`}>{login}</a>
@@ -72,7 +72,7 @@ function ReposGrid({ repos }) {
                 <FaExclamationTriangle color="rgb(241, 138, 147)" size={22} />
                 {open_issues.toLocaleString()} open
               </li>
-            </div>
+            </ul>
           </li>
         );
       })}
@@ -105,7 +105,7 @@ export default class Popular extends React.Component {
               ...repos,
               [selectedLanguage]: data
             }
-          }));
+          }), () => {console.log(this.state.repos)});
         })
         .catch(() => {
           console.warn('Error fetching repos: ', error);

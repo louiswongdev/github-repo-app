@@ -19,6 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv-webpack": "^1.7.0",
     "i": "^0.3.6",
     "npm": "^6.11.1",
     "prop-types": "^15.7.2",
