@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { fetchPopularRepos } from '../utils/api';
+
+import Card from './Card';
+
 import {
   FaUser,
   FaStar,
@@ -43,19 +46,14 @@ function ReposGrid({ repos }) {
         const { login, avatar_url } = owner;
 
         return (
-          <li key={html_url} className="repo bg-light">
-            <h4 className="header-lg center-text">#{index + 1}</h4>
-            <img
-              src={avatar_url}
-              alt={`Avatar for ${login}`}
-              className="avatar"
-            />
-            <h2 className="center-text">
-              <a href={html_url} className="link">
-                {login}
-              </a>
-            </h2>
-            <ul className="card-list">
+          <li key={html_url}>
+            <Card
+              header={`#${index + 1}`}
+              avatar={avatar_url}
+              href={html_url}
+              name={login}
+            >
+              <ul className="card-list">
               <li>
                 <FaUser color="rgb(255, 191, 116)" size={22} />
                 <a href={`https://github.com/${login}`}>{login}</a>
@@ -73,6 +71,7 @@ function ReposGrid({ repos }) {
                 {open_issues.toLocaleString()} open
               </li>
             </ul>
+            </Card>          
           </li>
         );
       })}
@@ -136,7 +135,7 @@ export default class Popular extends React.Component {
 
         {this.isLoading() && <p>LOADING</p>}
 
-        {error && <p>{error}</p>}
+        {error && <p className='center-text error'>{error}</p>}
 
         {repos[selectedLanguage] && (
           <ReposGrid repos={repos[selectedLanguage]} />
