@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { fetchPopularRepos } from '../utils/api';
 
+import Loading from './Loading';
 import Card from './Card';
 
 import {
@@ -133,7 +134,7 @@ export default class Popular extends React.Component {
           onUpdateLanguage={this.updateLanguage}
         />
 
-        {this.isLoading() && <p>LOADING</p>}
+        {this.isLoading() && <Loading text='Fetching Repos' />}
 
         {error && <p className='center-text error'>{error}</p>}
 

@@ -1,9 +1,50 @@
-import React from 'react'
+import React from 'react';
+import PropTypes from 'prop-types'
 
+import Loading from './Loading';
 import { battle } from '../utils/api';
+
 import Card from './Card';
 
-import { FaCompass, FaBriefcase, FaUsers, FaUserFriends, FaCode, FaUser } from 'react-icons/fa'
+import {
+  FaCompass,
+  FaBriefcase,
+  FaUsers,
+  FaUserFriends,
+  FaCode,
+  FaUser
+} from 'react-icons/fa';
+
+function ProfileList({ profile }) {
+  return (
+    <ul className="card-list">
+      <li>
+        <FaUser color="rgb(239, 115, 115)" size={22} />
+        {profile.name !== null ? `${profile.name}` : 'N/A'}
+      </li>
+      {profile.location && (
+        <li>
+          <FaCompass color="rgb(144, 115, 255)" size={22} />
+          {profile.location}
+        </li>
+      )}
+      {profile.company && (
+        <li>
+          <FaBriefcase color="#795548" size={22} />
+          {profile.company}
+        </li>
+      )}
+      <li>
+        <FaUsers color="rgb(129, 195, 245)" size={22} />
+        {profile.followers.toLocaleString()} followers
+      </li>
+      <li>
+        <FaUserFriends color="rgb(64, 183, 95)" size={22} />
+        {profile.following.toLocaleString()} following
+      </li>
+    </ul>
+  );
+}
 
 export default class Results extends React.Component {
   state = {
@@ -11,7 +52,7 @@ export default class Results extends React.Component {
     loser: null,
     error: null,
     loading: true
-  }
+  };
 
   componentDidMount() {
     const { playerOne, playerTwo } = this.props;
@@ -23,99 +64,62 @@ export default class Results extends React.Component {
           loser: players[1],
           error: null,
           loading: false
-        })
-      }).catch(({ message }) => {
+        });
+      })
+      .catch(({ message }) => {
         this.setState({
           error: message,
           loading: false
-        })
-      })
+        });
+      });
   }
 
   render() {
     const { winner, loser, error, loading } = this.state;
-    
-    if(loading === true) {
-      return <p>LOADING</p>
+
+    if (loading === true) {
+      return <Loading text='Battling' />;
     }
 
-    if(error) {
-      return (
-        <p className="center-text error">{error}</p>
-      )
+    if (error) {
+      return <p className="center-text error">{error}</p>;
     }
 
     return (
-      <div className='grid space-around container-sm'>
-        <Card
-          header={winner.score === loser.score ? 'Tie' : 'Winner'}
-          subheader={`Score: ${winner.score.toLocaleString()}`}
-          avatar={winner.profile.avatar_url}
-          href={winner.profile.html_url}
-          name={winner.profile.login}
+      <>
+        <div className="grid space-around container-sm">
+          <Card
+            header={winner.score === loser.score ? 'Tie' : 'Winner'}
+            subheader={`Score: ${winner.score.toLocaleString()}`}
+            avatar={winner.profile.avatar_url}
+            href={winner.profile.html_url}
+            name={winner.profile.login}
+          >
+            <ProfileList profile={winner.profile} />
+          </Card>
+          <Card
+            header={winner.score === loser.score ? 'Tie' : 'Loser'}
+            subheader={`Score: ${loser.score.toLocaleString()}`}
+            avatar={loser.profile.avatar_url}
+            name={loser.profile.login}
+            href={loser.profile.html_url}
+          >
+            <ProfileList profile={loser.profile} />
+          </Card>
+        </div>
+        <button
+          onClick={this.props.onReset}
+          className='btn btn-dark btn-space'
         >
-          <ul className='card-list'>
-            <li>
-              <FaUser color='rgb(239, 115, 115)' size={22} />
-              {winner.profile.name !== null ? `${winner.profile.name}` : 'N/A'}
-            </li>
-            {winner.profile.location && (
-              <li>
-                <FaCompass color='rgb(144, 115, 255)' size={22} />
-                {winner.profile.location}
-              </li>
-            )}
-            {winner.profile.company && (
-              <li>
-                <FaBriefcase color='#795548' size={22} />
-                {winner.profile.company}
-              </li>
-            )}
-            <li>
-              <FaUsers color='rgb(129, 195, 245)' size={22} />
-              {winner.profile.followers.toLocaleString()} followers
-            </li>
-            <li>
-              <FaUserFriends color='rgb(64, 183, 95)' size={22} />
-              {winner.profile.following.toLocaleString()} following
-            </li>
-          </ul>
-        </Card>
-        <Card
-          header={winner.score === loser.score ? 'Tie' : 'Loser'}
-          subheader={`Score: ${loser.score.toLocaleString()}`}
-          avatar={loser.profile.avatar_url}
-          name={loser.profile.login}
-          href={loser.profile.html_url}
-        >
-          <ul className='card-list'>
-            <li>
-              <FaUser color='rgb(239, 115, 115)' size={22} />
-              {loser.profile.name !== null ? `${loser.profile.name}` : 'N/A'}
-            </li>
-            {loser.profile.location && (
-              <li>
-                <FaCompass color='rgb(144, 115, 255)' size={22} />
-                {loser.profile.location}
-              </li>
-            )}
-            {loser.profile.company && (
-              <li>
-                <FaBriefcase color='#795548' size={22} />
-                {loser.profile.company}
-              </li>
-            )}
-            <li>
-              <FaUsers color='rgb(129, 195, 245)' size={22} />
-              {loser.profile.followers.toLocaleString()} followers
-            </li>
-            <li>
-              <FaUserFriends color='rgb(64, 183, 95)' size={22} />
-              {loser.profile.following.toLocaleString()} following
-            </li>
-          </ul>
-        </Card>
-      </div>
-    )
+          Reset
+        </button>
+      </>
+    );
   }
 }
+
+Results.propTypes = {
+  playerOne: PropTypes.string.isRequired,
+  playerTwo: PropTypes.string.isRequired,
+  onReset: PropTypes.func.isRequired
+};
