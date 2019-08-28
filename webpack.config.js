@@ -6,7 +6,8 @@ module.exports = {
   entry: './app/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'index_bundle.js'
+    filename: 'index_bundle.js',
+    publicPath: '/'
   },
   module: {
     rules: [
@@ -20,5 +21,8 @@ module.exports = {
       template: 'app/index.html'
     }),
     new Dotenv()
-  ]
+  ],
+  devServer: {
+    historyApiFallback: true
+  }
 };
